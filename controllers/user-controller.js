@@ -30,6 +30,25 @@ const getUserById = (req, res, next) => {
 
 }
 
+const updateUser = (req, res, next) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        console.log(errors)
+        throw new HttpError('Invalid input passed. Please check your data.', 422)
+    }
+    
+    const { name, password } = req.body;
+    const userId = req.params.uid
+    const updatedUser = { ...DUMMY_USERS.find(u => u.id === userId) }
+    const userIndex = DUMMY_USERS.findIndex(u => u.id === userId)
+    updatedUser.name = name
+    updatedUser.password = password
+
+    DUMMY_USERS[userIndex] = updatedUser
+
+    res.status(200).json({user: updatedUser})
+  }
+
 const signup = (req, res, next) => {
     const { name, email, password } = req.body;
 
@@ -63,6 +82,7 @@ const login = (req, res, next) => {
 
 exports.getUsers = getUsers
 exports.getUserById = getUserById
+exports.updateUser = updateUser
 exports.signup = signup
 exports.login = login  
   

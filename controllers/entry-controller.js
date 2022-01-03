@@ -13,6 +13,10 @@ let DUMMY_ENTRIES = [
     }
 ]
 
+const getEntries = (req, res, next) => {
+    res.json({wntries: DUMMY_ENTRIES})
+}
+
 const getEntryById = (req, res, next) => {
     const entryId = req.params.eid
     const entry = DUMMY_ENTRIES.find(e => {return e.id === entryId})
@@ -81,6 +85,7 @@ const createEntry = (req, res, next) => {
     res.status(200).json({message: 'Deleted entry'})
   }
   
+  exports.getEntries = getEntries
   exports.getEntryById = getEntryById
   exports.getEntriesByUserId = getEntriesByUserId
   exports.createEntry = createEntry

@@ -3,6 +3,7 @@ const { check } = require("express-validator");
 const entryController = require("../controllers/entry-controller");
 const router = express.Router();
 
+router.get('/', entryController.getEntries)
 router.get("/:eid", entryController.getEntryById);
 router.get("/user/:uid", entryController.getEntriesByUserId);
 router.post("/", [
