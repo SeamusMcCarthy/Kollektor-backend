@@ -7,13 +7,15 @@ const DUMMY_USERS = [
         id: 'u1',
         name: 'Seamus Mc',
         email: 'test@test.com',
-        password: 'testtest'
+        password: 'testtest',
+        role: 'user'
     },
     {
         id: 'u2',
         name: 'Seamus Mc2',
         email: 'test2@test2.com',
-        password: 'testtest'
+        password: 'testtest',
+        role: 'admin'
     }
 ]
 

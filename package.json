@@ -5,14 +5,18 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon index.js"
   },
   "author": "Seamus McCarthy (20091380)",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.1",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "express": "^4.17.2",
     "express-validator": "^6.14.0",
+    "mongodb": "^4.2.2",
+    "mongoose": "^6.1.5",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
