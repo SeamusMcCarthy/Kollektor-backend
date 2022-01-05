@@ -1,8 +1,9 @@
 const mongoose = require("mongoose")
-
+const dotenv = require("dotenv")
 const User = require('./models/user')
 
-mongoose.connect('mongodb+srv://kollektor-user:witfyp-ko@cluster0.llhnv.mongodb.net/kollektor?retryWrites=true&w=majority')
+dotenv.config()
+mongoose.connect(process.env.KOLLEKTOR_DATABASE)
 .then(() => {
     console.log('Connected to the DB')
 })
