@@ -4,7 +4,8 @@ const userSchema = mongoose.Schema({
     name: {type: String, required: true },
     email: {type: String, required: true },
     password: {type: String, required: true },
-    userType: {type: String, required: true }
+    role: {type: String, required: true },
+    numOfEntries: {type: Number, required: false}
 })
 
 module.exports = mongoose.model("User", userSchema);
