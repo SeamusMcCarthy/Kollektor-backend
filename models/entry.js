@@ -1,29 +1,29 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-const entrySchema = mongoose.Schema({
-    title: {type: String, required: true },
-    description: {type: String, required: true },
-    category: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: "Category",
-          required: true
-        },
-      ],
-    comments: [
-        {
-            type: String, required: true 
-        }
-      ],
-    user: 
-        {
-          type: Schema.Types.ObjectId,
-          ref: "User",
-          required: true
-        },
-    dateAdded: {type: Date, required: true},
-    purchaseLocation: {type: String, required: false}    
-
-})
+const entrySchema = new Schema({
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: "Category",
+    required: true,
+  },
+  comments: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Comment",
+      required: true,
+    },
+  ],
+  image: { type: String, required: true },
+  address: { type: String, required: true },
+  location: {
+    lat: { type: Number, required: true },
+    lng: { type: Number, required: true },
+  },
+  creator: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
+  dateAdded: { type: Date, required: true },
+});
 
 module.exports = mongoose.model("Entry", entrySchema);
