@@ -1,6 +1,6 @@
 const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
-const Entry = require("../models/entry");
+const Category = require("../models/category");
 const mongooseUniqueValidator = require("mongoose-unique-validator");
 const mongoose = require("mongoose");
 const fs = require("fs");
@@ -27,7 +27,7 @@ const getCategories = async (req, res, next) => {
   });
 };
 
-const getCategoryById = async (req, res, next) => {
+const getCategory = async (req, res, next) => {
   const categoryId = req.params.cid;
   let category;
   try {
@@ -94,7 +94,7 @@ const updateCategory = async (req, res, next) => {
   }
 
   const { title, description } = req.body;
-  const category = req.params.cid;
+  const categoryId = req.params.cid;
 
   let category;
   try {
@@ -168,12 +168,11 @@ const deleteCategory = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(200).json({ message: "Deleted place" });
+  res.status(200).json({ message: "Deleted category" });
 };
 
-exports.getEntries = getEntries;
-exports.getEntryById = getEntryById;
-exports.getEntriesByUserId = getEntriesByUserId;
-exports.createEntry = createEntry;
-exports.updateEntry = updateEntry;
-exports.deleteEntry = deleteEntry;
+exports.getCategories = getCategories;
+exports.getCategory = getCategory;
+exports.createCategory = createCategory;
+exports.updateCategory = updateCategory;
+exports.deleteCategory = deleteCategory;

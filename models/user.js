@@ -7,12 +7,12 @@ const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, minlength: 6 },
   image: { type: String, required: true },
-  //   entries: [{ type: mongoose.Types.ObjectId, required: true, ref: "Entry" }],
+  entries: [{ type: mongoose.Types.ObjectId, required: true, ref: "Entry" }],
   address: { type: String, required: true },
-  //   location: {
-  //     lat: { type: Number, required: true },
-  //     lng: { type: Number, required: true },
-  //   },
+  location: {
+    lat: { type: Number, required: true },
+    lng: { type: Number, required: true },
+  },
 });
 
 userSchema.plugin(uniqueValidator);

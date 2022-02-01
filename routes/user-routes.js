@@ -6,7 +6,7 @@ const fileUpload = require("../middleware/file-upload");
 
 router.get("/", userController.getUsers);
 // router.patch("/:uid", userController.updateUser);
-// router.get("/:uid", userController.getUserById);
+router.get("/:uid", userController.getUser);
 router.post("/signup", userController.signup);
 router.post("/login", userController.login);
 module.exports = router;

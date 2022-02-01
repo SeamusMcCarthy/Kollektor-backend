@@ -83,7 +83,7 @@ const createEntry = async (req, res, next) => {
       new HttpError("Invalid input passed. Please check your data.", 422)
     );
   }
-  const { title, description, address } = req.body;
+  const { title, description, address, creator, image, category } = req.body;
   let coordinates;
   try {
     coordinates = await getCoordsForAddress(address);
@@ -98,9 +98,11 @@ const createEntry = async (req, res, next) => {
     address,
     location: coordinates,
     // image: req.file.path,
-    image: "",
+    image: image,
     creator,
+    category,
     comments: [],
+    dateAdded: new Date().getTime(),
   });
   console.log(createdEntry);
 
@@ -223,7 +225,7 @@ const deleteEntry = async (req, res, next) => {
   //   fs.unlink(imagePath, (err) => {
   //     console.log(err);
   //   });
-  res.status(200).json({ message: "Deleted place" });
+  res.status(200).json({ message: "Deleted entry" });
 };
 
 exports.getEntries = getEntries;
