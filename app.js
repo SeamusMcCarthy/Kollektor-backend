@@ -48,9 +48,7 @@ app.use((error, req, res, next) => {
 
 dotenv.config();
 mongoose
-  .connect(
-    "mongodb+srv://kollektor-user:witfyp-ko@cluster0.llhnv.mongodb.net/kollektor1?retryWrites=true&w=majority"
-  )
+  .connect(process.env.KOLLEKTOR_DATABASE)
   .then(app.listen(5000))
   .catch((err) => {
     console.log(err.message);
