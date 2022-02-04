@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const entryRoutes = require("./routes/entry-routes");
 const userRoutes = require("./routes/user-routes");
 const categoryRoutes = require("./routes/category-routes");
+const commentRoutes = require("./routes/comment-routes");
 const HttpError = require("./models/http-error");
 const fs = require("fs");
 const path = require("path");
@@ -28,6 +29,7 @@ app.use((req, res, next) => {
 app.use("/api/v1/entry", entryRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/cat", categoryRoutes);
+app.use("/api/v1/comment", commentRoutes);
 
 app.use((req, res, next) => {
   const error = new HttpError("Could not find this route", 404);
