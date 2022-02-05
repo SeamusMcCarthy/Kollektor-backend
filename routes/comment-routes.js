@@ -7,7 +7,7 @@ router.get("/", commentController.getComments);
 router.get("/:cid", commentController.getCommentById);
 router.get("/entry/:eid", commentController.getCommentsByEntryId);
 router.post(
-  "/",
+  "/:eid",
   [check("body").not().isEmpty()],
   commentController.createComment
 );

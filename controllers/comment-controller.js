@@ -2,6 +2,7 @@ const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
 const getCoordsForAddress = require("../util/location");
 const Entry = require("../models/entry");
+const Comment = require("../models/comment");
 const mongooseUniqueValidator = require("mongoose-unique-validator");
 const mongoose = require("mongoose");
 
@@ -83,14 +84,14 @@ const createComment = async (req, res, next) => {
       new HttpError("Invalid input passed. Please check your data.", 422)
     );
   }
-  const { body, creator } = req.body;
+  const { body, creator, parentId } = req.body;
   const entryId = req.params.eid;
 
   const createdComment = new Comment({
     body,
     dateAdded: new Date().getTime(),
     creator,
-    parentId: null,
+    parentId,
   });
   console.log(createdComment);
 
