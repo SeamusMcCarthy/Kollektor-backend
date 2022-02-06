@@ -153,12 +153,6 @@ const updateComment = async (req, res, next) => {
     return next(error);
   }
 
-  //   TODO
-  //   if (entry.creator.toString() !== req.userData.userId) {
-  //     const error = new HttpError("You are not allowed to edit this place", 401);
-  //     return next(error);
-  //   }
-
   comment.body = body;
 
   try {
@@ -192,12 +186,6 @@ const deleteComment = async (req, res, next) => {
     const error = new HttpError("Could not find a comment for this id.", 404);
     return next(error);
   }
-
-  //   TODO
-  //   if (place.creator.id !== req.userData.userId) {
-  //     const error = new HttpError("You are not allowed to delete this place", 40);
-  //     return next(error);
-  //   }
 
   try {
     const session = await mongoose.startSession();

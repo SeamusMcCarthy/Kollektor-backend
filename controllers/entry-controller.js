@@ -138,7 +138,7 @@ const createEntry = async (req, res, next) => {
   try {
     user = await User.findById(creator);
   } catch (e) {
-    const error = new HttpError("Creating place failed, please try again", 500);
+    const error = new HttpError("Creating entry failed, please try again", 500);
     return next(error);
   }
 
@@ -151,7 +151,7 @@ const createEntry = async (req, res, next) => {
   try {
     cat = await Category.findById(category);
   } catch (e) {
-    const error = new HttpError("Creating place failed, please try again", 500);
+    const error = new HttpError("Creating entry failed, please try again", 500);
     return next(error);
   }
 
@@ -207,12 +207,6 @@ const updateEntry = async (req, res, next) => {
     return next(error);
   }
 
-  //   TODO
-  //   if (entry.creator.toString() !== req.userData.userId) {
-  //     const error = new HttpError("You are not allowed to edit this place", 401);
-  //     return next(error);
-  //   }
-
   entry.title = title;
   entry.description = description;
 
@@ -236,22 +230,16 @@ const deleteEntry = async (req, res, next) => {
     entry = await Entry.findById(entryId).populate("creator");
   } catch (e) {
     const error = new HttpError(
-      "Something went wrong. Could not delete place.",
+      "Something went wrong. Could not delete entry.",
       500
     );
     return next(error);
   }
 
   if (!entry) {
-    const error = new HttpError("Could not find a place for this id.", 404);
+    const error = new HttpError("Could not find an entry for this id.", 404);
     return next(error);
-  }
-
-  //   TODO
-  //   if (place.creator.id !== req.userData.userId) {
-  //     const error = new HttpError("You are not allowed to delete this place", 40);
-  //     return next(error);
-  //   }
+  }}
 
   const imagePath = entry.image;
 
