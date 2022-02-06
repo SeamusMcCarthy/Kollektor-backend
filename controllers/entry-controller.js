@@ -239,7 +239,7 @@ const deleteEntry = async (req, res, next) => {
   if (!entry) {
     const error = new HttpError("Could not find an entry for this id.", 404);
     return next(error);
-  }}
+  }
 
   const imagePath = entry.image;
 
