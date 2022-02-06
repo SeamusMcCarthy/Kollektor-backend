@@ -58,12 +58,13 @@ const createCategory = async (req, res, next) => {
       new HttpError("Invalid input passed. Please check your data.", 422)
     );
   }
-  const { title, description } = req.body;
+  const { title, description, image } = req.body;
 
   const createdCategory = new Category({
     title,
     description,
     entries: [],
+    image,
   });
   console.log(createdCategory);
 

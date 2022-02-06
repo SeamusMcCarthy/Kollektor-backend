@@ -4,6 +4,7 @@ const HttpError = require("../models/http-error");
 const getCoordsForAddress = require("../util/location");
 const Entry = require("../models/entry");
 const User = require("../models/user");
+const Category = require("../models/category");
 const mongooseUniqueValidator = require("mongoose-unique-validator");
 const mongoose = require("mongoose");
 const fs = require("fs");
@@ -75,6 +76,33 @@ const getEntriesByUserId = async (req, res, next) => {
   });
 };
 
+const getEntriesByCategoryId = async (req, res, next) => {
+  const catId = req.params.cid;
+
+  let entries;
+  try {
+    entries = await Entry.find({ category: catId });
+  } catch (e) {
+    const error = new HttpError(
+      "Fetching entries failed. Please try again later.",
+      500
+    );
+    return next(error);
+  }
+
+  if (!entries || entries.length === 0) {
+    return next(
+      new HttpError(
+        "Could not find any entries for the provided category id",
+        404
+      )
+    );
+  }
+  res.json({
+    entries: entries.map((entry) => entry.toObject({ getters: true })),
+  });
+};
+
 const createEntry = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -119,12 +147,33 @@ const createEntry = async (req, res, next) => {
     return next(error);
   }
 
+  let cat;
+  try {
+    cat = await Category.findById(category);
+  } catch (e) {
+    const error = new HttpError("Creating place failed, please try again", 500);
+    return next(error);
+  }
+
+  if (!cat) {
+    const error = new HttpError("Creating entry failed, invalid category", 404);
+    return next(error);
+  }
+
   try {
     const session = await mongoose.startSession();
     session.startTransaction();
+
+    // Save created entry
     await createdEntry.save({ session: session });
+
+    // Update entries for creating user
     user.entries.push(createdEntry);
     await user.save({ session: session });
+
+    // Update entries for select category
+    cat.entries.push(createdEntry);
+    await cat.save({ session: session });
     await session.commitTransaction();
   } catch (e) {
     console.log(e.message);
@@ -231,6 +280,7 @@ const deleteEntry = async (req, res, next) => {
 exports.getEntries = getEntries;
 exports.getEntryById = getEntryById;
 exports.getEntriesByUserId = getEntriesByUserId;
+exports.getEntriesByCategoryId = getEntriesByCategoryId;
 exports.createEntry = createEntry;
 exports.updateEntry = updateEntry;
 exports.deleteEntry = deleteEntry;

@@ -6,6 +6,7 @@ const router = express.Router();
 router.get("/", entryController.getEntries);
 router.get("/:eid", entryController.getEntryById);
 router.get("/user/:uid", entryController.getEntriesByUserId);
+router.get("/cat/:cid", entryController.getEntriesByCategoryId);
 router.post(
   "/",
   [
