@@ -1,8 +1,9 @@
-const { v4: uuidv4 } = require("uuid");
 const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
 const User = require("../models/user");
 const getCoordsForAddress = require("../util/location");
+const fs = require("fs");
+const jwt = require("jsonwebtoken");
 
 const getUsers = async (req, res, next) => {
   let users;
@@ -56,7 +57,7 @@ const signup = async (req, res, next) => {
     );
   }
 
-  const { name, email, password, address, image } = req.body;
+  const { name, email, password, address } = req.body;
 
   let existingUser;
   try {
@@ -87,8 +88,7 @@ const signup = async (req, res, next) => {
     password,
     address,
     location: coordinates,
-    // // image: req.file.path,
-    image: image,
+    image: req.file.path,
     entries: [],
   });
 
@@ -99,7 +99,22 @@ const signup = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(201).json({ user: createdUser.toObject({ getters: true }) });
+  let token;
+  try {
+    token = jwt.sign(
+      { userId: createdUser.id, email: createdUser.email },
+      "supersecret_dont_share",
+      { expiresIn: "2h" }
+    );
+  } catch (e) {
+    const error = new HttpError("Signup failed. Please try again later.", 500);
+    return next(error);
+  }
+
+  res
+    .status(201)
+    // .json({ user: createdUser.toObject({ getters: true }), token: token });
+    .json({ userId: createdUser.id, email: createdUser.email, token: token });
 };
 
 const login = async (req, res, next) => {
@@ -133,10 +148,27 @@ const login = async (req, res, next) => {
     );
     return next(error);
   }
+  console.log("Existing : " + existingUser.id + " " + existingUser.email);
+  let token;
+  try {
+    token = jwt.sign(
+      { userId: existingUser.id, email: existingUser.email },
+      "supersecret_dont_share",
+      { expiresIn: "2h" }
+    );
+  } catch (e) {
+    const error = new HttpError(
+      "Logging in failed. Please try again later.",
+      500
+    );
+    return next(error);
+  }
 
   res.status(200).json({
     message: "Logged in",
-    user: existingUser.toObject({ getters: true }),
+    userId: existingUser.id,
+    email: existingUser.email,
+    token: token,
   });
 };
 
