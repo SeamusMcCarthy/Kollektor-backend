@@ -106,12 +106,11 @@ const getEntriesByCategoryId = async (req, res, next) => {
 const createEntry = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.log(errors);
     return next(
       new HttpError("Invalid input passed. Please check your data.", 422)
     );
   }
-  const { title, description, address, creator, image, category } = req.body;
+  const { title, description, address, creator, category } = req.body;
   let coordinates;
   try {
     coordinates = await getCoordsForAddress(address);
@@ -125,33 +124,44 @@ const createEntry = async (req, res, next) => {
     description,
     address,
     location: coordinates,
-    // image: req.file.path,
-    image: image,
+    image: req.file.path,
     creator,
-    category,
+    category: "61fe85160b5a01e0d5915999",
     comments: [],
     dateAdded: new Date().getTime(),
   });
-  console.log(createdEntry);
 
   let user;
   try {
     user = await User.findById(creator);
   } catch (e) {
-    const error = new HttpError("Creating entry failed, please try again", 500);
+    const error = new HttpError(
+      "Creating entry failed, error finding user",
+      500
+    );
     return next(error);
   }
 
   if (!user) {
-    const error = new HttpError("Creating entry failed, invalid user", 404);
+    const error = new HttpError(
+      "Creating entry failed, no user with that id",
+      404
+    );
     return next(error);
   }
-
+  console.log("Category : " + category);
   let cat;
   try {
-    cat = await Category.findById(category);
+    // cat = await Category.findById(category);
+    cat = await Category.findOne({ title: category }).collation({
+      locale: "en",
+      strength: 2,
+    });
   } catch (e) {
-    const error = new HttpError("Creating entry failed, please try again", 500);
+    const error = new HttpError(
+      "Creating entry failed, error finding category",
+      500
+    );
     return next(error);
   }
 
