@@ -33,7 +33,13 @@ const getEntryById = async (req, res, next) => {
   const entryId = req.params.eid;
   let entry;
   try {
-    entry = await Entry.findById(entryId).populate("comments");
+    entry = await Entry.findById(entryId)
+      // .populate("comments")
+      // .populate("creator");
+      .populate({
+        path: "comments",
+        populate: { path: "creator", model: "User" },
+      });
   } catch (e) {
     const error = new HttpError(
       "Something went wrong. Could not find an entry for this ID.",

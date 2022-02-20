@@ -54,7 +54,9 @@ const getCommentsByEntryId = async (req, res, next) => {
 
   let comments;
   try {
-    comments = await Comment.find({ parentId: entryId });
+    comments = await Comment.find({ parentId: entryId })
+      .populate("creator")
+      .lean();
   } catch (e) {
     const error = new HttpError(
       "Fetching entries failed. Please try again later.",
@@ -72,7 +74,8 @@ const getCommentsByEntryId = async (req, res, next) => {
     );
   }
   res.json({
-    comments: comments.map((comment) => comment.toObject({ getters: true })),
+    // comments: comments.map((comment) => comment.toObject({ getters: true })),
+    comments: comments,
   });
 };
 
@@ -127,7 +130,10 @@ const createComment = async (req, res, next) => {
     return next(error);
   }
 
-  res.status(201).json({ comment: createdComment });
+  const returnedComment = await (
+    await Comment.findById(createdComment.id)
+  ).populate("creator");
+  res.status(201).json({ comment: returnedComment });
 };
 
 const updateComment = async (req, res, next) => {
