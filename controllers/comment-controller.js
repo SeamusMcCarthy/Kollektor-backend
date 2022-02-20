@@ -147,6 +147,7 @@ const updateComment = async (req, res, next) => {
 
   const { body } = req.body;
   const commentId = req.params.cid;
+  console.log(commentId + " " + body);
 
   let comment;
   try {
@@ -159,9 +160,8 @@ const updateComment = async (req, res, next) => {
     return next(error);
   }
 
-  comment.body = body;
-
   try {
+    comment.body = body;
     await comment.save();
   } catch (e) {
     const error = new HttpError(
