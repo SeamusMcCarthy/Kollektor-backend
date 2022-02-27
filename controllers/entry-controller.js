@@ -33,13 +33,10 @@ const getEntryById = async (req, res, next) => {
   const entryId = req.params.eid;
   let entry;
   try {
-    entry = await Entry.findById(entryId)
-      // .populate("comments")
-      // .populate("creator");
-      .populate({
-        path: "comments",
-        populate: { path: "creator", model: "User" },
-      });
+    entry = await Entry.findById(entryId).populate({
+      path: "comments",
+      populate: { path: "creator", model: "User" },
+    });
   } catch (e) {
     const error = new HttpError(
       "Something went wrong. Could not find an entry for this ID.",
@@ -124,7 +121,25 @@ const createEntry = async (req, res, next) => {
     return next(e);
   }
 
-  console.log(coordinates);
+  let cat;
+  try {
+    cat = await Category.findOne({ title: category }).collation({
+      locale: "en",
+      strength: 2,
+    });
+  } catch (e) {
+    const error = new HttpError(
+      "Creating entry failed, error finding category",
+      500
+    );
+    return next(error);
+  }
+
+  if (!cat) {
+    const error = new HttpError("Creating entry failed, invalid category", 404);
+    return next(error);
+  }
+
   const createdEntry = new Entry({
     title,
     description,
@@ -132,7 +147,7 @@ const createEntry = async (req, res, next) => {
     location: coordinates,
     image: req.file.path,
     creator,
-    category: "61fe85160b5a01e0d5915999",
+    category: cat,
     comments: [],
     dateAdded: new Date().getTime(),
   });
@@ -153,26 +168,6 @@ const createEntry = async (req, res, next) => {
       "Creating entry failed, no user with that id",
       404
     );
-    return next(error);
-  }
-  console.log("Category : " + category);
-  let cat;
-  try {
-    // cat = await Category.findById(category);
-    cat = await Category.findOne({ title: category }).collation({
-      locale: "en",
-      strength: 2,
-    });
-  } catch (e) {
-    const error = new HttpError(
-      "Creating entry failed, error finding category",
-      500
-    );
-    return next(error);
-  }
-
-  if (!cat) {
-    const error = new HttpError("Creating entry failed, invalid category", 404);
     return next(error);
   }
 
@@ -243,7 +238,9 @@ const deleteEntry = async (req, res, next) => {
   const entryId = req.params.eid;
   let entry;
   try {
-    entry = await Entry.findById(entryId).populate("creator");
+    entry = await Entry.findById(entryId)
+      .populate("creator")
+      .populate("category");
   } catch (e) {
     const error = new HttpError(
       "Something went wrong. Could not delete entry.",
@@ -266,6 +263,8 @@ const deleteEntry = async (req, res, next) => {
     await entry.remove({ session: session });
     entry.creator.entries.pull(entry);
     await entry.creator.save({ session: session });
+    entry.category.entries.pull(entry);
+    await entry.category.save({ session: session });
     await session.commitTransaction();
   } catch (e) {
     const error = new HttpError(

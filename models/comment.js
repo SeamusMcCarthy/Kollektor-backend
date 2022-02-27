@@ -6,6 +6,7 @@ const commentSchema = new Schema({
   creator: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
   dateAdded: { type: Date, required: true },
   parentId: { type: String, required: false },
+  entry: { type: mongoose.Types.ObjectId, required: true, ref: "Entry" },
 });
 
 module.exports = mongoose.model("Comment", commentSchema);

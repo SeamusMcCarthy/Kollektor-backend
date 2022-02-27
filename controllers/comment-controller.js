@@ -95,8 +95,8 @@ const createComment = async (req, res, next) => {
     dateAdded: new Date().getTime(),
     creator,
     parentId,
+    entry: entryId,
   });
-  console.log(createdComment);
 
   let entry;
   try {
@@ -147,7 +147,6 @@ const updateComment = async (req, res, next) => {
 
   const { body } = req.body;
   const commentId = req.params.cid;
-  console.log(commentId + " " + body);
 
   let comment;
   try {
@@ -178,8 +177,7 @@ const deleteComment = async (req, res, next) => {
   const commentId = req.params.cid;
   let comment;
   try {
-    // comment = await Comment.findById(commentId).populate("creator");
-    comment = await Comment.findById(commentId);
+    comment = await (await Comment.findById(commentId)).populate("entry");
   } catch (e) {
     const error = new HttpError(
       "Something went wrong. Could not delete comment.",
@@ -193,13 +191,13 @@ const deleteComment = async (req, res, next) => {
     return next(error);
   }
 
+  console.log("Found comment " + commentId);
   try {
     const session = await mongoose.startSession();
     session.startTransaction();
-
     await comment.remove({ session: session });
-    // entry.creator.entries.pull(entry);
-    // await entry.creator.save({ session: session });
+    comment.entry.comments.pull(comment);
+    await comment.entry.save({ session: session });
     await session.commitTransaction();
   } catch (e) {
     const error = new HttpError(
