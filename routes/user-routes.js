@@ -5,7 +5,7 @@ const { check } = require("express-validator");
 const fileUpload = require("../middleware/file-upload");
 
 router.get("/", userController.getUsers);
-// router.patch("/:uid", userController.updateUser);
+router.patch("/:uid", userController.updateUser);
 router.get("/:uid", userController.getUser);
 router.post("/signup", fileUpload.single("image"), userController.signup);
 router.post("/login", userController.login);
