@@ -60,7 +60,10 @@ const getEntriesByUserId = async (req, res, next) => {
 
   let entries;
   try {
-    entries = await Entry.find({ creator: userId });
+    entries = await Entry.find({ creator: userId }).populate({
+      path: "creator",
+      // populate: { path: "creator", model: "User" },
+    });
   } catch (e) {
     const error = new HttpError(
       "Fetching entries failed. Please try again later.",
@@ -84,7 +87,10 @@ const getEntriesByCategoryId = async (req, res, next) => {
 
   let entries;
   try {
-    entries = await Entry.find({ category: catId });
+    entries = await Entry.find({ category: catId }).populate({
+      path: "creator",
+      // populate: { path: "creator", model: "User" },
+    });
   } catch (e) {
     const error = new HttpError(
       "Fetching entries failed. Please try again later.",
@@ -274,9 +280,9 @@ const deleteEntry = async (req, res, next) => {
     return next(error);
   }
   //   TODO
-  //   fs.unlink(imagePath, (err) => {
-  //     console.log(err);
-  //   });
+  fs.unlink(imagePath, (err) => {
+    console.log(err);
+  });
   res.status(200).json({ message: "Deleted entry" });
 };
 
