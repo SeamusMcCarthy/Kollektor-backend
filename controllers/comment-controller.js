@@ -191,7 +191,6 @@ const deleteComment = async (req, res, next) => {
     return next(error);
   }
 
-  console.log("Found comment " + commentId);
   try {
     const session = await mongoose.startSession();
     session.startTransaction();

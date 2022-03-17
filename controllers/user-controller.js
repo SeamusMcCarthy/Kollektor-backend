@@ -129,7 +129,6 @@ const signup = async (req, res, next) => {
 const login = async (req, res, next) => {
   const { email, password } = req.body;
 
-  console.log(email, password);
   let existingUser;
   try {
     existingUser = await User.findOne({ email: email });
@@ -165,7 +164,6 @@ const login = async (req, res, next) => {
     return next(error);
   }
 
-  console.log("Existing : " + existingUser.id + " " + existingUser.email);
   let token;
   try {
     token = jwt.sign(

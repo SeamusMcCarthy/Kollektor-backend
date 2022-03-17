@@ -66,7 +66,6 @@ const createCategory = async (req, res, next) => {
     entries: [],
     image,
   });
-  console.log(createdCategory);
 
   try {
     const session = await mongoose.startSession();
