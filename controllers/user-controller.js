@@ -5,6 +5,7 @@ const getCoordsForAddress = require("../util/location");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const cloudinary = require("cloudinary");
 
 const getUsers = async (req, res, next) => {
   let users;
@@ -91,13 +92,21 @@ const signup = async (req, res, next) => {
     return next(e);
   }
 
+  const image = await cloudinary.uploader.upload(
+    req.file.path,
+    function (result) {
+      // console.log(result);
+    }
+  );
+
   const createdUser = new User({
     name,
     email,
     password: hashedPassword,
     address,
     location: coordinates,
-    image: req.file.path,
+    // image: req.file.path,
+    image: image.url,
     entries: [],
   });
 

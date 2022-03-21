@@ -9,10 +9,17 @@ const HttpError = require("./models/http-error");
 const fs = require("fs");
 const path = require("path");
 const dotenv = require("dotenv");
-
+const cloudinary = require("cloudinary");
 const app = express();
 
 app.use(bodyParser.json());
+
+dotenv.config();
+cloudinary.config({
+  cloud_name: process.env.name,
+  api_key: process.env.key,
+  api_secret: process.env.secret,
+});
 
 app.use("/uploads/images", express.static(path.join("uploads", "images")));
 
