@@ -8,6 +8,7 @@ const Category = require("../models/category");
 const mongooseUniqueValidator = require("mongoose-unique-validator");
 const mongoose = require("mongoose");
 const fs = require("fs");
+const cloudinary = require("cloudinary");
 
 const getEntries = async (req, res, next) => {
   let entries;
@@ -146,12 +147,20 @@ const createEntry = async (req, res, next) => {
     return next(error);
   }
 
+  const image = await cloudinary.uploader.upload(
+    req.file.path,
+    function (result) {
+      // console.log(result);
+    }
+  );
+
   const createdEntry = new Entry({
     title,
     description,
     address,
     location: coordinates,
-    image: req.file.path,
+    // image: req.file.path,
+    image: image.url,
     creator,
     category: cat,
     comments: [],
