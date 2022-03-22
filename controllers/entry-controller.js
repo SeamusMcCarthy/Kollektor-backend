@@ -269,7 +269,16 @@ const deleteEntry = async (req, res, next) => {
     return next(error);
   }
 
+  // Retrieve the image name without full path or extension in order to remove from Cloudinary
   const imagePath = entry.image;
+  const imageName = imagePath.substring(
+    imagePath.lastIndexOf("/") + 1,
+    imagePath.lastIndexOf(".")
+  );
+
+  cloudinary.uploader.destroy(imageName, function (error, result) {
+    console.log(result, error);
+  });
 
   try {
     const session = await mongoose.startSession();
@@ -288,10 +297,10 @@ const deleteEntry = async (req, res, next) => {
     );
     return next(error);
   }
-  //   TODO
-  fs.unlink(imagePath, (err) => {
-    console.log(err);
-  });
+
+  // fs.unlink(imagePath, (err) => {
+  //   console.log(err);
+  // });
   res.status(200).json({ message: "Deleted entry" });
 };
 
