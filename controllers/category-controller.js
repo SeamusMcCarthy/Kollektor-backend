@@ -1,7 +1,7 @@
 const { validationResult } = require("express-validator");
 const HttpError = require("../models/http-error");
 const Category = require("../models/category");
-const mongooseUniqueValidator = require("mongoose-unique-validator");
+// const mongooseUniqueValidator = require("mongoose-unique-validator");
 const mongoose = require("mongoose");
 const fs = require("fs");
 
