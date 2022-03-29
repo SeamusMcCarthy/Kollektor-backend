@@ -16,9 +16,9 @@ app.use(bodyParser.json());
 
 dotenv.config();
 cloudinary.config({
-  cloud_name: process.env.name,
-  api_key: process.env.key,
-  api_secret: process.env.secret,
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET,
 });
 
 app.use("/uploads/images", express.static(path.join("uploads", "images")));
@@ -58,7 +58,9 @@ app.use((error, req, res, next) => {
 
 dotenv.config();
 mongoose
-  .connect(process.env.KOLLEKTOR_DATABASE)
+  .connect(
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.llhnv.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
+  )
   .then(app.listen(5000))
   .catch((err) => {
     console.log(err.message);
