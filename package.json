@@ -2,17 +2,27 @@
   "name": "kollektor-backend",
   "version": "1.0.0",
   "description": "Backend for Kollektor MERN Full Stack Web App (WIT 2022)",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "node app.js"
   },
   "author": "Seamus McCarthy (20091380)",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.25.0",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.1",
+    "cloudinary": "",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "express": "^4.17.2",
     "express-validator": "^6.14.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.2.2",
+    "mongoose": "^6.1.5",
+    "mongoose-unique-validator": "^2.0.3",
+    "multer": "^1.4.4",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
