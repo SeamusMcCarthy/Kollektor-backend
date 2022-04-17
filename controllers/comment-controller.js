@@ -1,10 +1,9 @@
 const { validationResult } = require("express-validator");
+const mongoose = require("mongoose");
+
 const HttpError = require("../models/http-error");
-const getCoordsForAddress = require("../util/location");
 const Entry = require("../models/entry");
 const Comment = require("../models/comment");
-// const mongooseUniqueValidator = require("mongoose-unique-validator");
-const mongoose = require("mongoose");
 
 const getComments = async (req, res, next) => {
   let comments;
@@ -74,7 +73,6 @@ const getCommentsByEntryId = async (req, res, next) => {
     );
   }
   res.json({
-    // comments: comments.map((comment) => comment.toObject({ getters: true })),
     comments: comments,
   });
 };

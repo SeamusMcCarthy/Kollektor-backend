@@ -1,9 +1,8 @@
 const { validationResult } = require("express-validator");
+const mongoose = require("mongoose");
+
 const HttpError = require("../models/http-error");
 const Category = require("../models/category");
-// const mongooseUniqueValidator = require("mongoose-unique-validator");
-const mongoose = require("mongoose");
-const fs = require("fs");
 
 const getCategories = async (req, res, next) => {
   let categories;

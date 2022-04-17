@@ -1,14 +1,12 @@
-const { v4: uuidv4 } = require("uuid");
 const { validationResult } = require("express-validator");
-const HttpError = require("../models/http-error");
+const mongoose = require("mongoose");
+const cloudinary = require("cloudinary");
 const getCoordsForAddress = require("../util/location");
+
+const HttpError = require("../models/http-error");
 const Entry = require("../models/entry");
 const User = require("../models/user");
 const Category = require("../models/category");
-// const mongooseUniqueValidator = require("mongoose-unique-validator");
-const mongoose = require("mongoose");
-const fs = require("fs");
-const cloudinary = require("cloudinary");
 
 const getEntries = async (req, res, next) => {
   let entries;
@@ -63,7 +61,6 @@ const getEntriesByUserId = async (req, res, next) => {
   try {
     entries = await Entry.find({ creator: userId }).populate({
       path: "creator",
-      // populate: { path: "creator", model: "User" },
     });
   } catch (e) {
     const error = new HttpError(
@@ -90,7 +87,6 @@ const getEntriesByCategoryId = async (req, res, next) => {
   try {
     entries = await Entry.find({ category: catId }).populate({
       path: "creator",
-      // populate: { path: "creator", model: "User" },
     });
   } catch (e) {
     const error = new HttpError(
@@ -149,9 +145,7 @@ const createEntry = async (req, res, next) => {
 
   const image = await cloudinary.uploader.upload(
     req.file.path,
-    function (result) {
-      // console.log(result);
-    }
+    function (result) {}
   );
 
   const createdEntry = new Entry({
@@ -159,7 +153,6 @@ const createEntry = async (req, res, next) => {
     description,
     address,
     location: coordinates,
-    // image: req.file.path,
     image: image.url,
     creator,
     category: cat,
@@ -298,9 +291,6 @@ const deleteEntry = async (req, res, next) => {
     return next(error);
   }
 
-  // fs.unlink(imagePath, (err) => {
-  //   console.log(err);
-  // });
   res.status(200).json({ message: "Deleted entry" });
 };
 

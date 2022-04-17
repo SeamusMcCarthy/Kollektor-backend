@@ -56,7 +56,6 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || "An unknown error occurred!" });
 });
 
-dotenv.config();
 mongoose
   .connect(
     `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.llhnv.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`

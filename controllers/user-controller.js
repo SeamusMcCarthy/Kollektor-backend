@@ -1,11 +1,11 @@
 const { validationResult } = require("express-validator");
-const HttpError = require("../models/http-error");
-const User = require("../models/user");
-const getCoordsForAddress = require("../util/location");
-const fs = require("fs");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const cloudinary = require("cloudinary");
+
+const HttpError = require("../models/http-error");
+const User = require("../models/user");
+const getCoordsForAddress = require("../util/location");
 
 const getUsers = async (req, res, next) => {
   let users;
@@ -66,7 +66,7 @@ const signup = async (req, res, next) => {
     existingUser = await User.findOne({ email: email });
   } catch (e) {
     const error = new HttpError(
-      "Signing up failed. Please try again later2",
+      "Signing up failed. Please try again later",
       500
     );
     return next(error);
@@ -94,9 +94,7 @@ const signup = async (req, res, next) => {
 
   const image = await cloudinary.uploader.upload(
     req.file.path,
-    function (result) {
-      // console.log(result);
-    }
+    function (result) {}
   );
 
   const createdUser = new User({
@@ -105,7 +103,6 @@ const signup = async (req, res, next) => {
     password: hashedPassword,
     address,
     location: coordinates,
-    // image: req.file.path,
     image: image.url,
     entries: [],
   });
@@ -131,7 +128,6 @@ const signup = async (req, res, next) => {
 
   res
     .status(201)
-    // .json({ user: createdUser.toObject({ getters: true }), token: token });
     .json({ userId: createdUser.id, email: createdUser.email, token: token });
 };
 
